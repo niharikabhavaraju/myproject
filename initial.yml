@@ -1,0 +1,14 @@
+- hosts: all
+  become: yes
+  tasks:
+
+    - name: allow 'user' to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        line: 'niharika ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: set up authorized keys for the niharika user
+      authorized_key: user=niharika key="{{item}}"
+      with_file:
+        - ~/.ssh/id_rsa.pub
